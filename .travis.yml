@@ -61,7 +61,7 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_script:
-        - echo no | android create avd --force -n test -t android-27 --abi armeabi-v7a
+        - echo no | android create avd --force -n test -t android-27 --abi google_apis/armeabi-v7a
         - emulator -avd test -no-audio -no-window &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
@@ -80,7 +80,8 @@ matrix:
       language: generic
       osx_image: xcode8.3
       before_script:
-#        - pip install six
+        - easy_install pip
+        - pip install six
         - brew update
         - brew install --HEAD libimobiledevice
         - brew install ideviceinstaller
