@@ -40,16 +40,34 @@ matrix:
         - 'android-sdk-preview-license-.+'
         - 'android-sdk-license-.+'
         - 'google-gdk-license-.+'
+      env:
+        global:
+        - ANDROID_API=27
+        - EMULATOR_API=24
+        - ANDROID_BUILD_TOOLS=27.0.3
       android:
         components:
           - tools
+          - android-$EMULATOR_API
           - platform-tools
-          - build-tools-27.0.3
-          - android-27
-          - sys-img-armeabi-v7a-google_apis-27
+          - tools
+          - build-tools-$ANDROID_BUILD_TOOLS
+          - android-$ANDROID_API
+          - extra-android-support
           - extra-android-m2repository
           - extra-google-m2repository
-          - extra-google-android-support
+          - sys-img-armeabi-v7a-android-$EMULATOR_API
+#
+#          - tools
+#          - platform-tools
+#          - build-tools-27.0.3
+#          - android-27
+#          - sys-img-armeabi-v7a-google_apis-27
+#          - extra-android-m2repository
+#          - extra-google-m2repository
+#          - extra-google-android-support
+#          - sys-img-armeabi-v7a-addon-google_apis-google-27
+#          - sys-img-armeabi-v7a-android-27
       jdk: oraclejdk8
       sudo: false
       addons:
@@ -61,10 +79,24 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_script:
-        - echo no | android create avd --force -n test -t android-27 --abi google_apis/armeabi-v7a
-        - emulator -avd test -no-audio -no-window &
+        - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
+        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
+        - android list targets | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
+        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+        - emulator -avd test -no-skin -no-window &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
+        - adb wait-for-device get-serialno
+        - cd ${TRAVIS_BUILD_DIR}
+        - chmod +x gradlew
+        - ./gradlew --version
+        - ./gradlew clean
+#
+#        - android list avd
+#        - echo no | android create avd --force -n test -t android-27 --abi google_apis/armeabi-v7a
+#        - emulator -avd test -no-audio -no-window &
+#        - android-wait-for-emulator
+#        - adb shell input keyevent 82 &
         - wget http://services.gradle.org/distributions/gradle-4.1-bin.zip
         - unzip -qq gradle-4.1-bin.zip
         - export GRADLE_HOME=$PWD/gradle-4.1
@@ -73,6 +105,14 @@ matrix:
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
       script:
         - ./script/runDriver.sh
+      cache:
+        directories:
+        - $HOME/.m2
+        - $HOME/.gradle/caches/
+        - $HOME/.gradle/wrapper/
+        - $HOME/.android/build-cache
+      before_install:
+      - yes | sdkmanager "platforms;android-27"
 
     # Builds an IPA.
     - env: JOB=IPA
@@ -80,7 +120,7 @@ matrix:
       language: generic
       osx_image: xcode8.3
       before_script:
-        - easy_install pip
+        - sudo easy_install pip
         - pip install six
         - brew update
         - brew install --HEAD libimobiledevice
