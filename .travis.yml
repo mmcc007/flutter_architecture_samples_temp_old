@@ -41,10 +41,10 @@ matrix:
         - 'android-sdk-license-.+'
         - 'google-gdk-license-.+'
       env:
-        global:
-        - ANDROID_API=27
-        - EMULATOR_API=24
-        - ANDROID_BUILD_TOOLS=27.0.3
+#        global:
+          - ANDROID_API=27
+          - EMULATOR_API=24
+          - ANDROID_BUILD_TOOLS=27.0.3
       android:
         components:
           - tools
@@ -78,6 +78,8 @@ matrix:
           packages:
             - libstdc++6
             - fonts-droid
+      before_install:
+        - yes | sdkmanager "platforms;android-27"
       before_script:
         - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
         - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
@@ -87,10 +89,10 @@ matrix:
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
         - adb wait-for-device get-serialno
-        - cd ${TRAVIS_BUILD_DIR}
-        - chmod +x gradlew
-        - ./gradlew --version
-        - ./gradlew clean
+#        - cd ${TRAVIS_BUILD_DIR}
+#        - chmod +x gradlew
+#        - ./gradlew --version
+#        - ./gradlew clean
 #
 #        - android list avd
 #        - echo no | android create avd --force -n test -t android-27 --abi google_apis/armeabi-v7a
@@ -111,8 +113,6 @@ matrix:
         - $HOME/.gradle/caches/
         - $HOME/.gradle/wrapper/
         - $HOME/.android/build-cache
-      before_install:
-      - yes | sdkmanager "platforms;android-27"
 
     # Builds an IPA.
     - env: JOB=IPA
@@ -120,7 +120,7 @@ matrix:
       language: generic
       osx_image: xcode8.3
       before_script:
-        - sudo easy_install pip
+        - sudo curl https://bootstrap.pypa.io/get-pip.py | python
         - pip install six
         - brew update
         - brew install --HEAD libimobiledevice
