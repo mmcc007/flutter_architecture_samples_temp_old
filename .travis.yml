@@ -81,6 +81,16 @@ matrix:
       before_install:
         - yes | sdkmanager "platforms;android-27"
 #        - yes | sdkmanager --update
+      install:
+        - echo y | android update sdk -u -a -t tools
+        - echo y | android update sdk -u -a -t android-$EMULATOR_API
+        - echo y | android update sdk -u -a -t platform-tools
+        - echo y | android update sdk -u -a -t build-tools-$ANDROID_BUILD_TOOLS
+        - echo y | android update sdk -u -a -t android-$ANDROID_API
+        - echo y | android update sdk -u -a -t extra-android-support
+        - echo y | android update sdk -u -a -t extra-google-m2repository
+        - echo y | android update sdk -u -a -t extra-android-m2repository
+        - echo y | android update sdk -u -a -t sys-img-armeabi-v7a-android-$EMULATOR_API
       before_script:
         - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
         - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
@@ -104,13 +114,13 @@ matrix:
 #        - emulator -avd test -no-audio -no-window &
 #        - android-wait-for-emulator
 #        - adb shell input keyevent 82 &
-        - wget http://services.gradle.org/distributions/gradle-4.1-bin.zip
-        - unzip -qq gradle-4.1-bin.zip
-        - export GRADLE_HOME=$PWD/gradle-4.1
-        - export PATH=$GRADLE_HOME/bin:$PATH
+#        - wget http://services.gradle.org/distributions/gradle-4.1-bin.zip
+#        - unzip -qq gradle-4.1-bin.zip
+#        - export GRADLE_HOME=$PWD/gradle-4.1
+#        - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-        - flutter doctor --android-licenses
+        - flutter doctor
       script:
         - ./script/runDriver.sh
       cache:
@@ -125,17 +135,17 @@ matrix:
       os: osx
       language: generic
       osx_image: xcode9.4
-      before_install:
-        - xcrun simctl list
-        - |
-          ios_simulator_udid=$(
-            xcrun simctl create "testing device" \
-                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
-                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
-          )
-          echo "Prelaunching iOS simulator with UDID $ios_simulator_udid"
+#      before_install:
+#        - xcrun simctl list
+#        - |
+#          ios_simulator_udid=$(
+#            xcrun simctl create "testing device" \
+#                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
+#                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
+#          )
+#          echo "Prelaunching iOS simulator with UDID $ios_simulator_udid"
       before_script:
-        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
+#        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
         - curl https://bootstrap.pypa.io/get-pip.py | sudo python
         - pip install six
