@@ -1,7 +1,7 @@
 env:
   global:
     - ANDROID_API=27
-    - EMULATOR_API=24
+    - EMULATOR_API=27
     - ANDROID_BUILD_TOOLS=27.0.3
 matrix:
   # This causes the build to complete immediately upon first failure or once
@@ -128,11 +128,13 @@ matrix:
         - brew install --HEAD libimobiledevice || echo 'ignore exit(1)'
         - brew install ideviceinstaller
         - brew install ios-deploy
-        - brew install cocoapods
+        - brew install cocoapods || echo 'ignore exit(1)'
+        - brew link --overwrite cocoapods
         - pod setup
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
+        - flutter emulators --launch apple_ios_simulator
       script:
         - ./script/runDriver.sh
 
