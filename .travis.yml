@@ -86,6 +86,7 @@ matrix:
         - echo y | android update sdk -u -a -t android-$EMULATOR_API
         - echo y | android update sdk -u -a -t platform-tools
         - echo y | android update sdk -u -a -t build-tools-$ANDROID_BUILD_TOOLS
+        - echo y | android update sdk -u -a -t build-tools-26.0.2
         - echo y | android update sdk -u -a -t android-$ANDROID_API
         - echo y | android update sdk -u -a -t extra-android-support
         - echo y | android update sdk -u -a -t extra-google-m2repository
@@ -120,7 +121,7 @@ matrix:
 #        - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-        - flutter doctor
+        - flutter doctor --android-licenses
       script:
         - ./script/runDriver.sh
       cache:
@@ -135,17 +136,17 @@ matrix:
       os: osx
       language: generic
       osx_image: xcode9.4
-#      before_install:
-#        - xcrun simctl list
-#        - |
-#          ios_simulator_udid=$(
-#            xcrun simctl create "testing device" \
-#                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
-#                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
-#          )
-#          echo "Prelaunching iOS simulator with UDID $ios_simulator_udid"
+      before_install:
+        - xcrun simctl list
+        - |
+          ios_simulator_udid=$(
+            xcrun simctl create "testing device" \
+                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
+                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
+          )
+          echo "Prelaunching iOS simulator with UDID $ios_simulator_udid"
       before_script:
-#        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
+        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
         - curl https://bootstrap.pypa.io/get-pip.py | sudo python
         - pip install six
