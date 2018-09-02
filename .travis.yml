@@ -91,8 +91,9 @@ matrix:
         - avdmanager list
         - avdmanager list avd
         - |
-            avdmanager create avd --force --name test --abi google_apis/x86_64 --package
+            avdmanager create avd --force --name test --abi google_apis/x86_64 --package \
             'system-images;android-$EMULATOR_API;google_apis;x86_64' --device "Nexus 6P"
+        - emulator -list-avds
         - emulator -avd test -no-skin -no-audio -no-window &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
@@ -137,7 +138,10 @@ matrix:
                 "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
           )
           echo "Prelaunching iOS simulator with UDID $ios_simulator_udid"
-          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
+          xcrun simctl list
+          open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.appopen --args -CurrentDeviceUDID $ios_simulator_udid
+       #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
+
       before_script:
         - curl https://bootstrap.pypa.io/get-pip.py | sudo python
         - pip install six
