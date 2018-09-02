@@ -80,7 +80,7 @@ matrix:
             - fonts-droid
       before_install:
         - yes | sdkmanager "platforms;android-27"
-        - sdkmanager --update
+        - yes | sdkmanager --update
       before_script:
         - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
         - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
@@ -120,7 +120,7 @@ matrix:
     - env: JOB=DRIVER-OSX
       os: osx
       language: generic
-      osx_image: xcode8.3
+      osx_image: xcode9.0
       before_script:
         - curl https://bootstrap.pypa.io/get-pip.py | sudo python
         - pip install six
@@ -128,6 +128,8 @@ matrix:
         - brew install --HEAD libimobiledevice || echo 'ignore exit(1)'
         - brew install ideviceinstaller
         - brew install ios-deploy
+        - brew install cocoapods
+        - pod setup
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
