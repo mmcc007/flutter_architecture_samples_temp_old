@@ -1,7 +1,7 @@
 env:
   global:
     - ANDROID_API=27
-    - EMULATOR_API=27
+    - EMULATOR_API=24
     - ANDROID_BUILD_TOOLS=27.0.3
     - ios_device="iPhone 7"
     - ios_version=10.3
@@ -44,9 +44,7 @@ matrix:
       os: linux
       language: android
       licenses:
-        - 'android-sdk-preview-license-.+'
-        - 'android-sdk-license-.+'
-        - 'google-gdk-license-.+'
+        - ".+"
       android:
         components:
           - tools
@@ -82,16 +80,16 @@ matrix:
             - fonts-droid
       before_install:
         - yes | sdkmanager "platforms;android-27"
-        - yes | sdkmanager --update
+#        - yes | sdkmanager --update
       before_script:
         - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
-#        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
-#        - android list targets | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
-#        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
-        - avdmanager list
-        - avdmanager list avd
-        - avdmanager create avd --force --name test --abi google_apis/x86_64 --package 'system-images;android-$EMULATOR_API;google_apis;x86_64' --device "Nexus 6P"
-        - emulator -list-avds
+        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
+        - android list targets | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
+        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+#        - avdmanager list
+#        - avdmanager list avd
+#        - avdmanager create avd --force --name test --abi google_apis/x86_64 --package 'system-images;android-$EMULATOR_API;google_apis;x86_64' --device "Nexus 6P"
+#        - emulator -list-avds
         - emulator -avd test -no-skin -no-audio -no-window &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
@@ -140,7 +138,7 @@ matrix:
 
 
       before_script:
-        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.appopen --args -CurrentDeviceUDID $ios_simulator_udid
+        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
         - curl https://bootstrap.pypa.io/get-pip.py | sudo python
         - pip install six
