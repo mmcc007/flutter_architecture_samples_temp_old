@@ -102,7 +102,7 @@ matrix:
 #        - avdmanager list avd
 #        - avdmanager create avd --force --name test --abi google_apis/x86_64 --package 'system-images;android-$EMULATOR_API;google_apis;x86_64' --device "Nexus 6P"
 #        - emulator -list-avds
-        - emulator -avd test -no-window &
+        - emulator -avd test -no-skin -no-window &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
         - adb wait-for-device get-serialno
@@ -124,7 +124,7 @@ matrix:
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
       script:
-        - ./script/runDriver.sh
+        - ./script/runDriver.sh emulator-5554
       cache:
         directories:
         - $HOME/.m2
@@ -147,7 +147,7 @@ matrix:
           )
           echo "Prelaunching iOS simulator with UDID $ios_simulator_udid"
       before_script:
-#        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
+        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
         - curl https://bootstrap.pypa.io/get-pip.py | sudo python
         - pip install six
@@ -161,11 +161,11 @@ matrix:
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
-        - flutter emulators --create --name test_emulator
-        - flutter emulators --launch test_emulator
-        - flutter emulators
+#        - flutter emulators --create --name test_emulator
+#        - flutter emulators --launch test_emulator
+#        - flutter emulators
       script:
-        - ./script/runDriver.sh
+        - ./script/runDriver.sh $ios_simulator_udid
 
 cache:
   directories:

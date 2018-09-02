@@ -2,7 +2,7 @@
 
 # runs driver for a package that has a lib/main.dart
 runDriver () {
-  cd $1;
+  cd $1
   if [ -f "lib/main.dart" ]; then
     echo "running driver in $1"
     # check if build_runner needs to be run
@@ -11,12 +11,14 @@ runDriver () {
       flutter packages get
       flutter packages pub run build_runner build --delete-conflicting-outputs
     fi
-    flutter driver test_driver/todo_app.dart
+    flutter driver -d $2 test_driver/todo_app.dart
   fi
 }
 
 export -f runDriver
 
+export device_id=$1
+
 # expects to find most packages at second directory level
-find . -maxdepth 2 -type d -exec bash -c 'runDriver "$0"' {} \;
+find . -maxdepth 2 -type d -exec bash -c 'runDriver "$0" "$device_id"' {} \;
 # find exits with 0
