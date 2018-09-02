@@ -1,3 +1,8 @@
+env:
+  global:
+    - ANDROID_API=27
+    - EMULATOR_API=24
+    - ANDROID_BUILD_TOOLS=27.0.3
 matrix:
   # This causes the build to complete immediately upon first failure or once
   # required jobs are green.
@@ -40,11 +45,6 @@ matrix:
         - 'android-sdk-preview-license-.+'
         - 'android-sdk-license-.+'
         - 'google-gdk-license-.+'
-      env:
-#        global:
-          - ANDROID_API=27
-          - EMULATOR_API=24
-          - ANDROID_BUILD_TOOLS=27.0.3
       android:
         components:
           - tools
@@ -105,6 +105,7 @@ matrix:
         - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+        - flutter doctor --android-licenses
       script:
         - ./script/runDriver.sh
       cache:
@@ -120,7 +121,7 @@ matrix:
       language: generic
       osx_image: xcode8.3
       before_script:
-        - sudo curl https://bootstrap.pypa.io/get-pip.py | python
+        - curl https://bootstrap.pypa.io/get-pip.py | sudo python
         - pip install six
         - brew update
         - brew install --HEAD libimobiledevice
@@ -128,6 +129,7 @@ matrix:
         - brew install ios-deploy
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+        - flutter doctor --android-licenses
       script:
         - ./script/runDriver.sh
 
