@@ -89,8 +89,9 @@ matrix:
 #        - android list targets | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
 #        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
         - avdmanager list
-        - avdmanager create avd --force --name test --abi google_apis/x86_64 --package \
-        'system-images;android-$EMULATOR_API;google_apis;x86_64' --device "Nexus 6P"
+        - |
+            avdmanager create avd --force --name test --abi google_apis/x86_64 --package \
+            'system-images;android-$EMULATOR_API;google_apis;x86_64' --device "Nexus 6P"
         - emulator -avd test -no-skin -no-audio -no-window &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
