@@ -86,12 +86,12 @@ matrix:
         - ANDROID_SDK_ARCHIVE="${ANDROID_TOOLS_ROOT}/archive"
         - wget -q "${ANDROID_SDK_URL}" -O "${ANDROID_SDK_ARCHIVE}"
         - unzip -q -d "${ANDROID_TOOLS_ROOT}" "${ANDROID_SDK_ARCHIVE}"
+        - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
+        - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
         - yes | sdkmanager "build-tools;27.0.0"
         - yes | sdkmanager "platforms;android-27"
         - yes | sdkmanager "platform-tools"
         - rm "${ANDROID_SDK_ARCHIVE}"
-        - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
-        - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
         - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
 #        - yes | sdkmanager --update
 #      install:
@@ -164,7 +164,7 @@ matrix:
     - env: JOB=DRIVER-OSX
       os: osx
       language: generic
-      osx_image: xcode9.3
+      osx_image: xcode9.4
 #      before_install:
 #        - xcrun simctl list
 #        - |
@@ -194,6 +194,7 @@ matrix:
         - flutter doctor
         - flutter upgrade
         - flutter devices
+        - flutter emulators
 #        - echo ios_simulator_udid = $ios_simulator_udid
         - export device_id=`flutter devices | grep ios | awk '{print $4}'`
         - echo device_id = $device_id
