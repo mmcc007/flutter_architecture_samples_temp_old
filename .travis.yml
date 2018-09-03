@@ -97,11 +97,11 @@ matrix:
         - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
         - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
         - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
-        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
-#        - avdmanager list
-#        - avdmanager list avd
-#        - avdmanager create avd --force --name test --abi google_apis/x86_64 --package 'system-images;android-$EMULATOR_API;google_apis;x86_64' --device "Nexus 6P"
-#        - emulator -list-avds
+#        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+        - avdmanager list
+        - avdmanager list avd
+        - avdmanager create avd --force --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
+        - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
@@ -140,7 +140,7 @@ matrix:
       before_install:
         - xcrun simctl list
         - |
-          export ios_simulator_udid=$(
+          export ios_simulator_udid=ios_simulator_udid=$(
             xcrun simctl create "testing device" \
                 "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
                 "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
