@@ -88,9 +88,9 @@ matrix:
         - unzip -q -d "${ANDROID_TOOLS_ROOT}" "${ANDROID_SDK_ARCHIVE}"
         - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
         - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
-        - yes | sdkmanager "build-tools;27.0.0"
-        - yes | sdkmanager "platforms;android-27"
-        - yes | sdkmanager "platform-tools"
+        - yes | sdkmanager "build-tools;27.0.0" >/dev/null
+        - yes | sdkmanager "platforms;android-27" >/dev/null
+        - yes | sdkmanager "platform-tools" >/dev/null
         - rm "${ANDROID_SDK_ARCHIVE}"
         - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
 #        - yes | sdkmanager --update
@@ -145,10 +145,10 @@ matrix:
         - flutter upgrade
         - flutter devices
         - flutter emulators
-#        - flutter emulators --create --name test_emulator
-        - flutter emulators --launch test
-        - flutter emulators
-        - flutter devices
+#        - flutter emulators --create --name test
+#        - flutter emulators --launch test
+#        - flutter emulators
+#        - flutter devices
         - export device_id=`flutter devices | grep ios | awk '{print $4}'`
         - echo device_id = $device_id
       script:
@@ -194,13 +194,14 @@ matrix:
         - flutter doctor
         - flutter upgrade
         - flutter devices
+        - flutter emulators || echo 'ignore exit(1)'
+        - flutter emulators --create --name test
         - flutter emulators
+        - flutter emulators --launch test
+        - flutter devices
 #        - echo ios_simulator_udid = $ios_simulator_udid
         - export device_id=`flutter devices | grep ios | awk '{print $4}'`
         - echo device_id = $device_id
-#        - flutter emulators --create --name test_emulator
-#        - flutter emulators --launch test_emulator
-#        - flutter emulators
       script:
         - ./script/runDriver.sh $device_id
 
