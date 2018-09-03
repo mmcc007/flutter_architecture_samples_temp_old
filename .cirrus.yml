@@ -56,19 +56,19 @@ task:
     wait_for_emulator_script:
       - adb wait-for-device
       - adb shell input keyevent 82
-  setup_script:
-      - git clone https://github.com/flutter/flutter.git -b beta
-      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-      - flutter precache
-      - yes "y" | flutter doctor --android-licenses
-      - flutter upgrade
-      - flutter devices
-      - flutter emulators
-      - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
-      - echo device_id = $device_id
-  build_script:
-      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-      - ./script/runDriver.sh $device_id
+#  setup_script:
+#      - git clone https://github.com/flutter/flutter.git -b beta
+#      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+#      - flutter precache
+#      - yes "y" | flutter doctor --android-licenses
+#      - flutter upgrade
+#      - flutter devices
+#      - flutter emulators
+#      - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
+#      - echo device_id = $device_id
+#  build_script:
+#      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+#      - ./script/runDriver.sh $device_id
 
 task:
   name: build-ipas
