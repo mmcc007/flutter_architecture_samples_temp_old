@@ -177,7 +177,7 @@ matrix:
           )
           echo Prelaunching iOS simulator with UDID $ios_simulator_udid
       before_script:
-        - /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
+        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
 #        - export $ios_simulator_udid
 #        - curl https://bootstrap.pypa.io/get-pip.py | sudo python
