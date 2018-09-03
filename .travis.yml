@@ -88,7 +88,7 @@ matrix:
         - unzip -q -d "${ANDROID_TOOLS_ROOT}" "${ANDROID_SDK_ARCHIVE}"
         - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
         - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
-        - export PATH="${ANDROID_SDK_ROOT}/emulator:${PATH}"
+        - export PATH="${ANDROID_TOOLS_ROOT}/emulator:${PATH}"
         - yes | sdkmanager "build-tools;26.0.0" >/dev/null
         - yes | sdkmanager "platforms;android-26" >/dev/null
         - yes | sdkmanager "platform-tools" >/dev/null
@@ -204,7 +204,7 @@ matrix:
 #        - flutter emulators --launch test || echo 'ignore exit(1)'
 #        - flutter devices
         - echo ios_simulator_udid = $ios_simulator_udid
-        - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
+        - export device_id=`flutter devices | grep simulator | awk 'BEGIN {FS="• | •"} {print $2}'`
         - echo device_id = $device_id
       script:
         - ./script/runDriver.sh $device_id
