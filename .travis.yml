@@ -43,21 +43,21 @@ matrix:
     - env: JOB=DRIVER-ANDROID
       os: linux
       language: android
-#      licenses:
-#        - ".+"
-#      android:
-#        components:
-#          - tools
-#          - android-$EMULATOR_API
-#          - platform-tools
-#          - tools
-#          - build-tools-$ANDROID_BUILD_TOOLS
-#          - build-tools-26.0.2 # downloaded by gradle
-#          - android-$ANDROID_API
-#          - extra-android-support
-#          - extra-android-m2repository
-#          - extra-google-m2repository
-#          - sys-img-armeabi-v7a-android-$EMULATOR_API
+      licenses:
+        - ".+"
+      android:
+        components:
+          - tools
+          - android-$EMULATOR_API
+          - platform-tools
+          - tools
+          - build-tools-$ANDROID_BUILD_TOOLS
+          - build-tools-26.0.2 # downloaded by gradle
+          - android-$ANDROID_API
+          - extra-android-support
+          - extra-android-m2repository
+          - extra-google-m2repository
+          - sys-img-armeabi-v7a-android-$EMULATOR_API
 #
 #          - tools
 #          - platform-tools
@@ -79,23 +79,23 @@ matrix:
           packages:
             - libstdc++6
             - fonts-droid
-      before_install:
-        - ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
-        - ANDROID_TOOLS_ROOT="/opt/android_sdk"
-        - mkdir -p "${ANDROID_TOOLS_ROOT}"
-        - ANDROID_SDK_ARCHIVE="${ANDROID_TOOLS_ROOT}/archive"
-        - wget -q "${ANDROID_SDK_URL}" -O "${ANDROID_SDK_ARCHIVE}"
-        - unzip -q -d "${ANDROID_TOOLS_ROOT}" "${ANDROID_SDK_ARCHIVE}"
-        - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
-        - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
-        - export PATH="${ANDROID_TOOLS_ROOT}/emulator:${PATH}"
-        - yes | sdkmanager "build-tools;26.0.0" >/dev/null
-        - yes | sdkmanager "platforms;android-26" >/dev/null
-        - yes | sdkmanager "platform-tools" >/dev/null
-        - yes | sdkmanager "system-images;android-26;google_apis;x86" > /dev/null
-        - yes | sdkmanager --licenses > /dev/null
-        - rm "${ANDROID_SDK_ARCHIVE}"
-        - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
+#      before_install:
+#        - ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
+#        - ANDROID_TOOLS_ROOT="/opt/android_sdk"
+#        - mkdir -p "${ANDROID_TOOLS_ROOT}"
+#        - ANDROID_SDK_ARCHIVE="${ANDROID_TOOLS_ROOT}/archive"
+#        - wget -q "${ANDROID_SDK_URL}" -O "${ANDROID_SDK_ARCHIVE}"
+#        - unzip -q -d "${ANDROID_TOOLS_ROOT}" "${ANDROID_SDK_ARCHIVE}"
+#        - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
+#        - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
+#        - export PATH="${ANDROID_TOOLS_ROOT}/emulator:${PATH}"
+#        - yes | sdkmanager "build-tools;26.0.0" >/dev/null
+#        - yes | sdkmanager "platforms;android-26" >/dev/null
+#        - yes | sdkmanager "platform-tools" >/dev/null
+#        - yes | sdkmanager "system-images;android-26;google_apis;x86" > /dev/null
+#        - yes | sdkmanager --licenses > /dev/null
+#        - rm "${ANDROID_SDK_ARCHIVE}"
+#        - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
 #        - yes | sdkmanager --update
 #      install:
 #        - echo y | android update sdk -u -a -t tools
@@ -109,6 +109,8 @@ matrix:
 #        - echo y | android update sdk -u -a -t extra-android-m2repository
 #        - echo y | android update sdk -u -a -t sys-img-armeabi-v7a-android-$EMULATOR_API
       before_script:
+        - env
+        - echo PATH = $PATH
 #        - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
 #        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
 #        - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
@@ -122,7 +124,6 @@ matrix:
         - avdmanager list avd
 #        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
         - echo no | avdmanager create avd -n test -k "system-images;android-26;google_apis;x86"
-        - echo PATH = $PATH
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
