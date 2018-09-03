@@ -1,7 +1,7 @@
 env:
   global:
     - ANDROID_API=27
-    - EMULATOR_API=26
+    - EMULATOR_API=27
     - ANDROID_BUILD_TOOLS=27.0.3
     - ios_device="iPhone 7"
     - ios_version=10.3
@@ -42,22 +42,22 @@ matrix:
     # Builds and runs driver on android.
     - env: JOB=DRIVER-ANDROID
       os: linux
-      language: android
-      licenses:
-        - ".+"
-      android:
-        components:
-          - tools
-          - android-$EMULATOR_API
-          - platform-tools
-          - tools
-          - build-tools-$ANDROID_BUILD_TOOLS
-          - build-tools-26.0.2 # downloaded by gradle
-          - android-$ANDROID_API
-          - extra-android-support
-          - extra-android-m2repository
-          - extra-google-m2repository
-          - sys-img-armeabi-v7a-android-$EMULATOR_API
+#      language: android
+#      licenses:
+#        - ".+"
+#      android:
+#        components:
+#          - tools
+#          - android-$EMULATOR_API
+#          - platform-tools
+#          - tools
+#          - build-tools-$ANDROID_BUILD_TOOLS
+#          - build-tools-26.0.2 # downloaded by gradle
+#          - android-$ANDROID_API
+#          - extra-android-support
+#          - extra-android-m2repository
+#          - extra-google-m2repository
+#          - sys-img-armeabi-v7a-android-$EMULATOR_API
 #
 #          - tools
 #          - platform-tools
@@ -80,7 +80,19 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_install:
+        - ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
+        - ANDROID_TOOLS_ROOT="/opt/android_sdk"
+        - mkdir -p "${ANDROID_TOOLS_ROOT}"
+        - ANDROID_SDK_ARCHIVE="${ANDROID_TOOLS_ROOT}/archive"
+        - wget -q "${ANDROID_SDK_URL}" -O "${ANDROID_SDK_ARCHIVE}"
+        - unzip -q -d "${ANDROID_TOOLS_ROOT}" "${ANDROID_SDK_ARCHIVE}"
+        - yes | sdkmanager "build-tools;27.0.0"
         - yes | sdkmanager "platforms;android-27"
+        - yes | sdkmanager "platform-tools"
+        - rm "${ANDROID_SDK_ARCHIVE}"
+        - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
+        - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
+        - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
 #        - yes | sdkmanager --update
 #      install:
 #        - echo y | android update sdk -u -a -t tools
@@ -94,18 +106,19 @@ matrix:
 #        - echo y | android update sdk -u -a -t extra-android-m2repository
 #        - echo y | android update sdk -u -a -t sys-img-armeabi-v7a-android-$EMULATOR_API
       before_script:
-        - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
-        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
-        - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
-        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+#        - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
+#        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
+#        - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
+#        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
 #        - which sdkmanager
 #        - find /usr/local -maxdepth 2 -iname *android* -type d
 #        - find / -iname avdmanager
 #        - echo PATH=$PATH
 #        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
-#        - avdmanager list
-#        - avdmanager list avd
-#        - avdmanager create avd --force --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
+        - avdmanager list
+        - avdmanager list avd
+#        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
+        - avdmanager create avd -n test -k "system-images;android-$EMULATOR_API;google_apis;x86"
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
@@ -127,10 +140,19 @@ matrix:
 #        - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-        - flutter doctor
+        - flutter precache
+        - yes "y" | flutter doctor --android-licenses
+        - flutter upgrade
         - flutter devices
+        - flutter emulators
+#        - flutter emulators --create --name test_emulator
+        - flutter emulators --launch test
+        - flutter emulators
+        - flutter devices
+        - export device_id=`flutter devices | grep ios | awk '{print $4}'`
+        - echo device_id = $device_id
       script:
-        - ./script/runDriver.sh emulator-5554
+        - ./script/runDriver.sh $device_id
       cache:
         directories:
         - $HOME/.m2
@@ -142,34 +164,37 @@ matrix:
     - env: JOB=DRIVER-OSX
       os: osx
       language: generic
-      osx_image: xcode9.4
-      before_install:
-        - xcrun simctl list
-        - |
-          export ios_simulator_udid=ios_simulator_udid=$(
-            xcrun simctl create "testing device" \
-                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
-                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
-          )
-          echo Prelaunching iOS simulator with UDID $ios_simulator_udid
+      osx_image: xcode9.3
+#      before_install:
+#        - xcrun simctl list
+#        - |
+#          export ios_simulator_udid=ios_simulator_udid=$(
+#            xcrun simctl create "testing device" \
+#                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
+#                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
+#          )
+#          echo Prelaunching iOS simulator with UDID $ios_simulator_udid
       before_script:
-        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
+#        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
-        - export $ios_simulator_udid
-        - curl https://bootstrap.pypa.io/get-pip.py | sudo python
-        - pip install six
+#        - export $ios_simulator_udid
+#        - curl https://bootstrap.pypa.io/get-pip.py | sudo python
+#        - pip install six
         - brew update
-        - brew install --HEAD libimobiledevice || echo 'ignore exit(1)'
+#        - brew install --HEAD libimobiledevice || echo 'ignore exit(1)'
+        - brew install libimobiledevice || echo 'ignore exit(1)'
         - brew install ideviceinstaller
         - brew install ios-deploy
         - brew install cocoapods || echo 'ignore exit(1)'
         - brew link --overwrite cocoapods
-        - pod setup
+#        - pod setup
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+        - flutter precache
         - flutter doctor
+        - flutter upgrade
         - flutter devices
-        - echo ios_simulator_udid = $ios_simulator_udid
+#        - echo ios_simulator_udid = $ios_simulator_udid
         - export device_id=`flutter devices | grep ios | awk '{print $4}'`
         - echo device_id = $device_id
 #        - flutter emulators --create --name test_emulator
