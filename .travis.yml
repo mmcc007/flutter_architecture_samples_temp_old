@@ -89,10 +89,10 @@ matrix:
         - export PATH="${ANDROID_TOOLS_ROOT}/tools:${PATH}"
         - export PATH="${ANDROID_TOOLS_ROOT}/tools/bin:${PATH}"
         - export PATH="${ANDROID_SDK_ROOT}/emulator:${PATH}"
-        - yes | sdkmanager "build-tools;27.0.0" >/dev/null
-        - yes | sdkmanager "platforms;android-27" >/dev/null
+        - yes | sdkmanager "build-tools;26.0.0" >/dev/null
+        - yes | sdkmanager "platforms;android-26" >/dev/null
         - yes | sdkmanager "platform-tools" >/dev/null
-        - yes | sdkmanager "system-images;android-27;google_apis;x86" > /dev/null
+        - yes | sdkmanager "system-images;android-26;google_apis;x86" > /dev/null
         - yes | sdkmanager --licenses > /dev/null
         - rm "${ANDROID_SDK_ARCHIVE}"
         - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
@@ -122,6 +122,7 @@ matrix:
         - avdmanager list avd
 #        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
         - echo no | avdmanager create avd -n test -k "system-images;android-27;google_apis;x86"
+        - echo PATH = $PATH
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
@@ -152,7 +153,7 @@ matrix:
 #        - flutter emulators --launch test
 #        - flutter emulators
 #        - flutter devices
-        - export device_id=`flutter devices | grep ios | awk '{print $4}'`
+        - export device_id=`flutter devices | grep emulator | awk 'BEGIN {FS="• | •"} {print $2}'`
         - echo device_id = $device_id
       script:
         - ./script/runDriver.sh $device_id
@@ -168,17 +169,17 @@ matrix:
       os: osx
       language: generic
       osx_image: xcode9.0
-#      before_install:
-#        - xcrun simctl list
-#        - |
-#          export ios_simulator_udid=ios_simulator_udid=$(
-#            xcrun simctl create "testing device" \
-#                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
-#                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
-#          )
-#          echo Prelaunching iOS simulator with UDID $ios_simulator_udid
+      before_install:
+        - xcrun simctl list
+        - |
+          export ios_simulator_udid=ios_simulator_udid=$(
+            xcrun simctl create "testing device" \
+                "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
+                "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
+          )
+          echo Prelaunching iOS simulator with UDID $ios_simulator_udid
       before_script:
-#        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
+        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
 #        - export $ios_simulator_udid
 #        - curl https://bootstrap.pypa.io/get-pip.py | sudo python
@@ -197,13 +198,13 @@ matrix:
         - flutter doctor
         - flutter upgrade
         - flutter devices
-#        - flutter emulators || echo 'ignore exit(1)'
+        - flutter emulators || echo 'ignore exit(1)'
 #        - flutter emulators --create --name test
 #        - flutter emulators
 #        - flutter emulators --launch test || echo 'ignore exit(1)'
 #        - flutter devices
-#        - echo ios_simulator_udid = $ios_simulator_udid
-        - export device_id=`flutter devices | grep ios | awk '{print $4}'`
+        - echo ios_simulator_udid = $ios_simulator_udid
+        - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'
         - echo device_id = $device_id
       script:
         - ./script/runDriver.sh $device_id
