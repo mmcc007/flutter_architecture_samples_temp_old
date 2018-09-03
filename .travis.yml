@@ -121,7 +121,7 @@ matrix:
         - avdmanager list
         - avdmanager list avd
 #        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
-        - echo no | avdmanager create avd -n test -k "system-images;android-27;google_apis;x86"
+        - echo no | avdmanager create avd -n test -k "system-images;android-26;google_apis;x86"
         - echo PATH = $PATH
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
@@ -204,7 +204,7 @@ matrix:
 #        - flutter emulators --launch test || echo 'ignore exit(1)'
 #        - flutter devices
         - echo ios_simulator_udid = $ios_simulator_udid
-        - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'
+        - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
         - echo device_id = $device_id
       script:
         - ./script/runDriver.sh $device_id

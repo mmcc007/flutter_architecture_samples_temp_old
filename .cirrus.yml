@@ -1,53 +1,15 @@
-#task:
-#  name: build-apks
-#  container:
-#    image: cirrusci/flutter:latest
-#    cpu: 4
-#    memory: 8G
-#  upgrade_script:
-#    - flutter channel beta
-#    - flutter precache
-#    - flutter doctor
-#    - flutter upgrade
-#    - flutter devices
-#    - git fetch origin master
-#  build_script:
-#    - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-#    - ./script/runTests.sh
-#  activate_script: pub global activate flutter_plugin_tools
-#  matrix:
-#    - name: publishable
-#      script: ./script/check_publish.sh
-#    - name: test+format
-#      install_script:
-#        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-#        - sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main"
-#        - sudo apt-get update
-#        - sudo apt-get install -y --allow-unauthenticated clang-format-5.0
-#      format_script: ./script/incremental_build.sh format --travis --clang-format=clang-format-5.0
-#      test_script: ./script/incremental_build.sh test
-#    - name: analyze
-#      script: ./script/incremental_build.sh analyze
-#    - name: build-apks+java-test
-#      env:
-#        matrix:
-#          PLUGIN_SHARDING: "--shardIndex 0 --shardCount 2"
-#          PLUGIN_SHARDING: "--shardIndex 1 --shardCount 2"
-#      script:
-#        - ./script/incremental_build.sh build-examples --apk
-#        - ./script/incremental_build.sh java-test  # must come after apk build
-
 task:
   name: build-apks
   container:
-    image: cirrusci/android-sdk:27
+    image: cirrusci/android-sdk:18
     cpu: 4
     memory: 10G
+
   check_android_task:
     create_device_script: >
       echo no | avdmanager create avd --force \
           -n test \
-          -k "system-images;android-27;default;armeabi-v7a"
+          -k "system-images;android-18;default;armeabi-v7a"
     start_emulator_background_script: >
       $ANDROID_HOME/emulator/emulator \
           -avd test \
@@ -56,19 +18,17 @@ task:
     wait_for_emulator_script:
       - adb wait-for-device
       - adb shell input keyevent 82
-#  setup_script:
-#      - git clone https://github.com/flutter/flutter.git -b beta
-#      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-#      - flutter precache
-#      - yes "y" | flutter doctor --android-licenses
-#      - flutter upgrade
-#      - flutter devices
-#      - flutter emulators
-#      - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
-#      - echo device_id = $device_id
-#  build_script:
-#      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-#      - ./script/runDriver.sh $device_id
+    check_script:
+      - git clone https://github.com/flutter/flutter.git -b beta
+      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+      - flutter precache
+      - yes "y" | flutter doctor --android-licenses
+      - flutter upgrade
+      - flutter devices
+      - flutter emulators
+      - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
+      - echo device_id = $device_id
+      - ./script/runDriver.sh $device_id
 
 task:
   name: build-ipas
