@@ -91,6 +91,8 @@ matrix:
         - yes | sdkmanager "build-tools;27.0.0" >/dev/null
         - yes | sdkmanager "platforms;android-27" >/dev/null
         - yes | sdkmanager "platform-tools" >/dev/null
+        - yes | sdkmanager "system-images;android-27;google_apis;x86" > /dev/null
+        - sdkmanager --licenses > /dev/null
         - rm "${ANDROID_SDK_ARCHIVE}"
         - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
 #        - yes | sdkmanager --update
@@ -174,8 +176,8 @@ matrix:
                 "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
           )
           echo Prelaunching iOS simulator with UDID $ios_simulator_udid
-          /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
       before_script:
+        - /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
 #        - export $ios_simulator_udid
 #        - curl https://bootstrap.pypa.io/get-pip.py | sudo python
