@@ -42,7 +42,7 @@ matrix:
     # Builds and runs driver on android.
     - env: JOB=DRIVER-ANDROID
       os: linux
-#      language: android
+      language: android
 #      licenses:
 #        - ".+"
 #      android:
