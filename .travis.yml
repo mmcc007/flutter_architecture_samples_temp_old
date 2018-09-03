@@ -1,7 +1,7 @@
 env:
   global:
     - ANDROID_API=27
-    - EMULATOR_API=27
+    - EMULATOR_API=26
     - ANDROID_BUILD_TOOLS=27.0.3
     - ios_device="iPhone 7"
     - ios_version=10.3
@@ -97,15 +97,15 @@ matrix:
         - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
         - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
         - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
-#        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
-        - which sdkmanager
-        - find /usr/local -maxdepth 2 -iname *android* -type d
-        - find / -iname avdmanager
-        - echo PATH=$PATH
-        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
-        - avdmanager list
-        - avdmanager list avd
-        - avdmanager create avd --force --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
+        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+#        - which sdkmanager
+#        - find /usr/local -maxdepth 2 -iname *android* -type d
+#        - find / -iname avdmanager
+#        - echo PATH=$PATH
+#        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
+#        - avdmanager list
+#        - avdmanager list avd
+#        - avdmanager create avd --force --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
@@ -128,6 +128,7 @@ matrix:
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
+        - flutter devices
       script:
         - ./script/runDriver.sh emulator-5554
       cache:
@@ -169,13 +170,13 @@ matrix:
         - flutter doctor
         - flutter devices
         - echo ios_simulator_udid = $ios_simulator_udid
-#        - export device_id=`flutter devices | grep ios | awk '{print $4}'`
-#        - echo device_id = $device_id
+        - export device_id=`flutter devices | grep ios | awk '{print $4}'`
+        - echo device_id = $device_id
 #        - flutter emulators --create --name test_emulator
 #        - flutter emulators --launch test_emulator
 #        - flutter emulators
       script:
-        - ./script/runDriver.sh $ios_simulator_udid
+        - ./script/runDriver.sh $device_id
 
 cache:
   directories:
