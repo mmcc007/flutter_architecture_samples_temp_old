@@ -98,6 +98,12 @@ matrix:
         - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
         - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
 #        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+        - which sdkmanager
+        - ls
+        - pwd
+        - find /usr/local/android* -type d
+        - find /usr/local -name avdmanager
+        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
         - avdmanager list
         - avdmanager list avd
         - avdmanager create avd --force --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
@@ -145,7 +151,7 @@ matrix:
                 "com.apple.CoreSimulator.SimDeviceType.${ios_device// /-}" \
                 "com.apple.CoreSimulator.SimRuntime.iOS-${ios_version//./-}"
           )
-          echo "Prelaunching iOS simulator with UDID $ios_simulator_udid"
+          echo Prelaunching iOS simulator with UDID $ios_simulator_udid
       before_script:
         - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
@@ -162,9 +168,9 @@ matrix:
         - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
         - flutter doctor
-        - echo "ios_simulator_udid = $ios_simulator_udid"
+        - echo ios_simulator_udid = $ios_simulator_udid
         - export device_id=`flutter devices | grep ios | awk '{print $4}'`
-        - echo "device_id = $device_id"
+        - echo device_id = $device_id
 #        - flutter emulators --create --name test_emulator
 #        - flutter emulators --launch test_emulator
 #        - flutter emulators
