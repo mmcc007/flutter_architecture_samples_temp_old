@@ -92,7 +92,7 @@ matrix:
         - yes | sdkmanager "platforms;android-27" >/dev/null
         - yes | sdkmanager "platform-tools" >/dev/null
         - yes | sdkmanager "system-images;android-27;google_apis;x86" > /dev/null
-        - sdkmanager --licenses > /dev/null
+        - yes | sdkmanager --licenses > /dev/null
         - rm "${ANDROID_SDK_ARCHIVE}"
         - export ANDROID_HOME="${ANDROID_TOOLS_ROOT}"
 #        - yes | sdkmanager --update
@@ -177,7 +177,7 @@ matrix:
           )
           echo Prelaunching iOS simulator with UDID $ios_simulator_udid
       before_script:
-        - /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
+#        - /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $ios_simulator_udid
 #          open -a "simulator" --args -CurrentDeviceUDID $ios_simulator_udid
 #        - export $ios_simulator_udid
 #        - curl https://bootstrap.pypa.io/get-pip.py | sudo python
@@ -196,11 +196,11 @@ matrix:
         - flutter doctor
         - flutter upgrade
         - flutter devices
-#        - flutter emulators || echo 'ignore exit(1)'
+        - flutter emulators || echo 'ignore exit(1)'
 #        - flutter emulators --create --name test
 #        - flutter emulators
-#        - flutter emulators --launch test
-#        - flutter devices
+        - flutter emulators --launch test || echo 'ignore exit(1)'
+        - flutter devices
 #        - echo ios_simulator_udid = $ios_simulator_udid
         - export device_id=`flutter devices | grep ios | awk '{print $4}'`
         - echo device_id = $device_id
