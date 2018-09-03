@@ -3,7 +3,7 @@ env:
     - ANDROID_API=27
     - EMULATOR_API=27
     - ANDROID_BUILD_TOOLS=27.0.3
-    - ios_device="iPhone 8"
+    - ios_device="iPhone 7"
     - ios_version=10.3
 matrix:
   # This causes the build to complete immediately upon first failure or once
@@ -99,7 +99,7 @@ matrix:
         - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
 #        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
         - which sdkmanager
-        - find /usr/local -iname *android* -type d -depth 2
+        - find /usr/local -maxdepth 2 -iname *android* -type d
         - find / -iname avdmanager
         - echo PATH=$PATH
         - export PATH=/usr/local/android-sdk/tools/bin:$PATH
