@@ -1,59 +1,79 @@
-task:
-  name: build-apks
-  container:
-    image: cirrusci/android-sdk:18
-    cpu: 4
-    memory: 10G
+container:
+  image: cirrusci/android-sdk:18
+  cpu: 4
+  memory: 10G
 
-  check_android_task:
-    create_device_script: >
-      echo no | avdmanager create avd --force \
-          -n test \
-          -k "system-images;android-18;default;armeabi-v7a"
-    start_emulator_background_script: >
-      $ANDROID_HOME/emulator/emulator \
-          -avd test \
-          -no-audio \
-          -no-window
-    wait_for_emulator_script:
-      - adb wait-for-device
-      - adb shell input keyevent 82
-    check_script:
-      - git clone https://github.com/flutter/flutter.git -b beta
-      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-      - flutter precache
-      - yes "y" | flutter doctor --android-licenses
-      - flutter upgrade
-      - flutter devices
-      - flutter emulators
-      - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
-      - echo device_id = $device_id
-      - ./script/runDriver.sh $device_id
+check_android_task:
+  create_device_script: >
+    echo no | avdmanager create avd --force \
+        -n test \
+        -k "system-images;android-18;default;armeabi-v7a"
+  start_emulator_background_script: >
+    $ANDROID_HOME/emulator/emulator \
+        -avd test \
+        -no-audio \
+        -no-window
+  wait_for_emulator_script:
+    - adb wait-for-device
+    - adb shell input keyevent 82
+  check_script: echo hello
 
-task:
-  name: build-ipas
-  osx_instance:
-    image: high-sierra-xcode-9.4
-  env:
-    PATH: $PATH:/usr/local/bin
-#    matrix:
-#      PLUGIN_SHARDING: "--shardIndex 0 --shardCount 2"
-#      PLUGIN_SHARDING: "--shardIndex 1 --shardCount 2"
-  setup_script:
-    - brew update
-    - brew install libimobiledevice
-    - brew install ideviceinstaller
-    - brew install ios-deploy
-    - pod repo update
-    - git clone https://github.com/flutter/flutter.git -b beta
-    - git fetch origin master
-    - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-    - flutter doctor
-    - flutter upgrade
-    - flutter devices
-    - flutter emulators
-    - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
-    - echo device_id = $device_id
-  build_script:
-    - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-    - ./script/runDriver.sh $device_id
+#task:
+#  name: build-apks
+#  container:
+#    image: cirrusci/android-sdk:18
+#    cpu: 4
+#    memory: 10G
+#
+#  check_android_task:
+#    create_device_script: >
+#      echo no | avdmanager create avd --force \
+#          -n test \
+#          -k "system-images;android-18;default;armeabi-v7a"
+#    start_emulator_background_script: >
+#      $ANDROID_HOME/emulator/emulator \
+#          -avd test \
+#          -no-audio \
+#          -no-window
+#    wait_for_emulator_script:
+#      - adb wait-for-device
+#      - adb shell input keyevent 82
+#    check_script:
+#      - git clone https://github.com/flutter/flutter.git -b beta
+#      - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+#      - flutter precache
+#      - yes "y" | flutter doctor --android-licenses
+#      - flutter upgrade
+#      - flutter devices
+#      - flutter emulators
+#      - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
+#      - echo device_id = $device_id
+#      - ./script/runDriver.sh $device_id
+#
+#task:
+#  name: build-ipas
+#  osx_instance:
+#    image: high-sierra-xcode-9.4
+#  env:
+#    PATH: $PATH:/usr/local/bin
+##    matrix:
+##      PLUGIN_SHARDING: "--shardIndex 0 --shardCount 2"
+##      PLUGIN_SHARDING: "--shardIndex 1 --shardCount 2"
+#  setup_script:
+#    - brew update
+#    - brew install libimobiledevice
+#    - brew install ideviceinstaller
+#    - brew install ios-deploy
+#    - pod repo update
+#    - git clone https://github.com/flutter/flutter.git -b beta
+#    - git fetch origin master
+#    - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+#    - flutter doctor
+#    - flutter upgrade
+#    - flutter devices
+#    - flutter emulators
+#    - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
+#    - echo device_id = $device_id
+#  build_script:
+#    - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+#    - ./script/runDriver.sh $device_id
