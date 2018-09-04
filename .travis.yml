@@ -51,19 +51,19 @@ matrix:
           - android-$ANDROID_API
           - platform-tools
           - tools
-          - build-tools-$ANDROID_BUILD_TOOLS
+          - build-tools-${ANDROID_BUILD_TOOLS}
           - build-tools-26.0.2 # downloaded by gradle
           - android-$ANDROID_API
           - extra-android-support
           - extra-android-m2repository
           - extra-google-m2repository
           - extra-google-android-support
-          - sys-img-armeabi-v7a-android-$EMULATOR_API
-          - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
-          - sys-img-armeabi-v7a-google_apis-$EMULATOR_API
+          - sys-img-armeabi-v7a-android-${EMULATOR_API}
+          - sys-img-armeabi-v7a-addon-google_apis-google-${EMULATOR_API}
+          - sys-img-armeabi-v7a-google_apis-${EMULATOR_API}
         packages:
           - "tools"
-          - 'build-tools;$ANDROID_API'
+          - 'build-tools;${ANDROID_API}'
           - "extras;android;m2repository"
 
 
@@ -89,8 +89,8 @@ matrix:
             - fonts-droid
       before_install:
         - yes | sdkmanager tools
-        - yes | sdkmanager "system-images;android-27;default;armeabi-v7a"
-        - echo no | avdmanager create avd --force -n test -k "system-images;android-$ANDROID_API;default;armeabi-v7a"
+#        - yes | sdkmanager "system-images;android-27;default;armeabi-v7a"
+#        - echo no | avdmanager create avd --force -n test -k "system-images;android-$ANDROID_API;default;armeabi-v7a"
 #        - ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
 #        - ANDROID_TOOLS_ROOT="/opt/android_sdk"
 #        - mkdir -p "${ANDROID_TOOLS_ROOT}"
@@ -129,12 +129,13 @@ matrix:
         - which sdkmanager
 #        - find /usr/local -maxdepth 2 -iname *android* -type d
         - find /usr/local -iname avdmanager
+        - which avdmanager
 #        - echo PATH=$PATH
 #        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
         - avdmanager list
         - avdmanager list avd
-#        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
-#        - echo no | avdmanager create avd -n test -k "system-images;android-$EMULATOR_API;google_apis;x86"
+#        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-${EMULATOR_API};google_apis;x86' --device "Nexus 6P"
+        - echo no | avdmanager create avd -n test -k "system-images;android-${EMULATOR_API};google_apis;x86"
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
