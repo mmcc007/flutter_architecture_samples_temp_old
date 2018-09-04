@@ -61,6 +61,10 @@ matrix:
           - sys-img-armeabi-v7a-android-$EMULATOR_API
           - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
           - sys-img-armeabi-v7a-google_apis-$EMULATOR_API
+        packages:
+          - "tools"
+          - "build-tools;$ANDROID_API"
+          - "extras;android;m2repository"
 
 
 #          - tools
@@ -119,9 +123,9 @@ matrix:
 #        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
 #        - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
 #        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
-#        - which sdkmanager
+        - which sdkmanager
 #        - find /usr/local -maxdepth 2 -iname *android* -type d
-        - find /usr/local -iname avdmanager
+        - find /opt -iname avdmanager
 #        - echo PATH=$PATH
 #        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
         - avdmanager list
