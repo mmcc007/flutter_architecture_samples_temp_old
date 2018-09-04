@@ -57,8 +57,12 @@ matrix:
           - extra-android-support
           - extra-android-m2repository
           - extra-google-m2repository
+          - extra-google-android-support
           - sys-img-armeabi-v7a-android-$EMULATOR_API
-#
+          - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
+          - sys-img-armeabi-v7a-google_apis-$EMULATOR_API
+
+
 #          - tools
 #          - platform-tools
 #          - build-tools-27.0.3
@@ -117,13 +121,13 @@ matrix:
 #        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
 #        - which sdkmanager
 #        - find /usr/local -maxdepth 2 -iname *android* -type d
-#        - find / -iname avdmanager
+        - find /usr/local -iname avdmanager
 #        - echo PATH=$PATH
 #        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
         - avdmanager list
         - avdmanager list avd
 #        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-$EMULATOR_API;google_apis;x86' --device "Nexus 6P"
-        - echo no | avdmanager create avd -n test -k "system-images;android-26;google_apis;x86"
+        - echo no | avdmanager create avd -n test -k "system-images;android-$EMULATOR_API;google_apis;x86"
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator

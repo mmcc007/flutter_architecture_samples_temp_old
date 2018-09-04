@@ -16,22 +16,32 @@ check_android_task:
   wait_for_emulator_script:
     - adb wait-for-device
     - adb shell input keyevent 82
-  check_script: echo hello
-
-task:
-  name: build-apks
-  setup_script:
+  check_script:
     - git clone https://github.com/flutter/flutter.git -b beta
     - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
     - flutter precache
     - yes "y" | flutter doctor --android-licenses
     - flutter upgrade
     - flutter devices
-    - flutter emulators
-    - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
+    - flutter emulators || echo ignore exit(1)
+    - export device_id=`flutter devices | grep emulator | awk 'BEGIN {FS="• | •"} {print $2}'`
     - echo device_id = $device_id
-  build_script:
     - ./script/runDriver.sh $device_id
+
+#task:
+#  name: build-apks
+#  setup_script:
+#    - git clone https://github.com/flutter/flutter.git -b beta
+#    - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+#    - flutter precache
+#    - yes "y" | flutter doctor --android-licenses
+#    - flutter upgrade
+#    - flutter devices
+#    - flutter emulators || echo ignore exit(1)
+#    - export device_id=`flutter devices | grep emulator | awk 'BEGIN {FS="• | •"} {print $2}'`
+#    - echo device_id = $device_id
+#  build_script:
+#    - ./script/runDriver.sh $device_id
 
 task:
   name: build-ipas
@@ -39,9 +49,6 @@ task:
     image: high-sierra-xcode-9.4
   env:
     PATH: $PATH:/usr/local/bin
-#    matrix:
-#      PLUGIN_SHARDING: "--shardIndex 0 --shardCount 2"
-#      PLUGIN_SHARDING: "--shardIndex 1 --shardCount 2"
   setup_script:
     - brew update
     - brew install libimobiledevice
@@ -54,8 +61,8 @@ task:
     - flutter doctor
     - flutter upgrade
     - flutter devices
-    - flutter emulators
-    - export device_id=`flutter devices | grep ios | awk 'BEGIN {FS="• | •"} {print $2}'`
+    - flutter emulators || echo ignore exit(1)
+    - export device_id=`flutter devices | grep simulator | awk 'BEGIN {FS="• | •"} {print $2}'`
     - echo device_id = $device_id
   build_script:
     - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
