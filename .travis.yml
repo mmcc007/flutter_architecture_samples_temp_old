@@ -138,6 +138,10 @@ matrix:
         - avdmanager list avd
 #        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-${EMULATOR_API};google_apis;x86' --device "Nexus 6P"
         - echo no | avdmanager create avd -n test -k "system-images;android-27;google_apis;x86"
+        - echo $ANDROID_SDK_ROOT
+        - which emulator
+        - export PATH=/usr/local/android-sdk/emulator:$PATH
+        - which emulator
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
