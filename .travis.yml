@@ -1,8 +1,8 @@
 env:
   global:
-    - ANDROID_API_LEVEL=24
-    - EMULATOR_API_LEVEL=23
-    - ANDROID_BUILD_TOOLS_VERSION=24.0.3
+    - ANDROID_API_LEVEL=18
+    - EMULATOR_API_LEVEL=18
+    - ANDROID_BUILD_TOOLS_VERSION=18.1.1
     - ANDROID_ABI=default;armeabi-v7a
     - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
 language: android
@@ -27,9 +27,9 @@ before_install:
 # Install the rest of tools (e.g., avdmanager)
 - sdkmanager tools
 # Install the system image
-- sdkmanager --list
 - sdkmanager "system-images;android-$ANDROID_API_LEVEL;$ANDROID_ABI" >/dev/null
 - sdkmanager "system-images;android-$EMULATOR_API_LEVEL;$ANDROID_ABI" >/dev/null
+- sdkmanager --list
 # Create and start emulator for the script. Meant to race the install task.
 - echo no | avdmanager create avd --force -n test -k "system-images;android-$EMULATOR_API_LEVEL;$ANDROID_ABI"
 - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
