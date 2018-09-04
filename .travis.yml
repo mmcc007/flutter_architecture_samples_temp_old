@@ -4,13 +4,13 @@ jdk:
 - oraclejdk8
 
 addons:
-        apt:
-          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
-          sources:
-            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
-          packages:
-            - libstdc++6
-            - fonts-droid
+  apt:
+    # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
+    sources:
+      - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+    packages:
+      - libstdc++6
+      - fonts-droid
 
 before_install:
 # Install SDK license so Android Gradle plugin can install deps.
@@ -27,16 +27,16 @@ before_install:
 before_script:
 - android-wait-for-emulator
 - adb shell input keyevent 82
-        # install flutter
-        - git clone https://github.com/flutter/flutter.git -b beta
-        - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-        - flutter precache
-        - yes "y" | flutter doctor --android-licenses
-        - flutter upgrade
-        - flutter devices
-        - flutter emulators
-        - export device_id=`flutter devices | grep emulator | awk 'BEGIN {FS="• | •"} {print $2}'`
-        - echo device_id = $device_id
+# install flutter
+- git clone https://github.com/flutter/flutter.git -b beta
+- export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+- flutter precache
+- yes "y" | flutter doctor --android-licenses
+- flutter upgrade
+- flutter devices
+- flutter emulators
+- export device_id=`flutter devices | grep emulator | awk 'BEGIN {FS="• | •"} {print $2}'`
+- echo device_id = $device_id
 script:
   - ./script/runDriver.sh $device_id
 
