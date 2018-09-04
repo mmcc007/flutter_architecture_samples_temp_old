@@ -1,8 +1,8 @@
 env:
   global:
-    - ANDROID_API_LEVEL=18
-    - EMULATOR_API_LEVEL=18
-    - ANDROID_BUILD_TOOLS_VERSION=18.1.1
+    - ANDROID_API_LEVEL=21
+    - EMULATOR_API_LEVEL=21
+    - ANDROID_BUILD_TOOLS_VERSION=21.1.2
     - ANDROID_ABI="default;armeabi-v7a"
     - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
 language: android
