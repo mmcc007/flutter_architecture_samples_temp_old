@@ -88,7 +88,8 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_install:
-        - yes | sdkmanager tools
+        - echo y | sdkmanager tools
+        - echo y | sdkmanager "system-images;android-27;google_apis;x86"
 #        - yes | sdkmanager "system-images;android-27;default;armeabi-v7a"
 #        - echo no | avdmanager create avd --force -n test -k "system-images;android-$ANDROID_API;default;armeabi-v7a"
 #        - ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
@@ -120,22 +121,23 @@ matrix:
 #        - echo y | android update sdk -u -a -t extra-android-m2repository
 #        - echo y | android update sdk -u -a -t sys-img-armeabi-v7a-android-$EMULATOR_API
       before_script:
-        - env
-        - echo PATH = $PATH
+#        - env
+#        - echo PATH = $PATH
 #        - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
 #        - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
 #        - android list target | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
 #        - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
-        - which sdkmanager
+#        - which sdkmanager
 #        - find /usr/local -maxdepth 2 -iname *android* -type d
-        - find /usr/local -iname avdmanager
-        - which avdmanager
+#        - find /usr/local -iname avdmanager
+#        - which avdmanager
 #        - echo PATH=$PATH
 #        - export PATH=/usr/local/android-sdk/tools/bin:$PATH
+        - sdkmanager --list
         - avdmanager list
         - avdmanager list avd
 #        - avdmanager create avd --name test --abi google_apis/x86 --package 'system-images;android-${EMULATOR_API};google_apis;x86' --device "Nexus 6P"
-        - echo no | avdmanager create avd -n test -k "system-images;android-${EMULATOR_API};google_apis;x86"
+        - echo no | avdmanager create avd -n test -k "system-images;android-27;google_apis;x86"
         - emulator -list-avds
         - emulator -avd test -no-skin -no-window -gpu swiftshader &
         - android-wait-for-emulator
