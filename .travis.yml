@@ -89,7 +89,7 @@ matrix:
             - fonts-droid
       before_install:
         - yes | sdkmanager tools
-        - yes | sdkmanager "system-images;android-$ANDROID_API;default;armeabi-v7a"
+        - yes | sdkmanager "system-images;android-27;default;armeabi-v7a"
         - echo no | avdmanager create avd --force -n test -k "system-images;android-$ANDROID_API;default;armeabi-v7a"
 #        - ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
 #        - ANDROID_TOOLS_ROOT="/opt/android_sdk"
