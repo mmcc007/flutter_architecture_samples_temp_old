@@ -32,7 +32,7 @@ before_install:
 - sdkmanager --list
 # Create and start emulator for the script. Meant to race the install task.
 - echo no | avdmanager create avd --force -n test -k "system-images;android-$EMULATOR_API_LEVEL;$ANDROID_ABI"
-- $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+- $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu swiftshader &
 
 before_script:
 - android-wait-for-emulator
