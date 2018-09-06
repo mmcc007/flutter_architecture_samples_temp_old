@@ -26,7 +26,7 @@ class TodoListElement extends TestElement {
     return driver.runUnsynchronized(() {
       return widgetExists(driver, _loadingFinder,
           timeout: Duration(milliseconds: 15000));
-    });
+    }, timeout: Duration(milliseconds: 20000));
   }
 
   Future<bool> get isReady => widgetExists(driver, _todoListFinder);
