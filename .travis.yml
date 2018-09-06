@@ -50,9 +50,9 @@ before_script:
 - export device_id=`flutter devices | grep emulator | awk 'BEGIN {FS="• | •"} {print $2}'`
 - echo device_id = $device_id
 script:
-#  - ./script/runDriver.sh $device_id
-  - cd example/vanilla
-  - flutter -v drive test_driver/todo_app.dart
+  - ./script/runDriver.sh $device_id
+#  - cd example/vanilla
+#  - flutter -v drive test_driver/todo_app.dart
 sudo: false
 
 cache:
