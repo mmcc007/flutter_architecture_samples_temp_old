@@ -29,7 +29,8 @@ class TodoListElement extends TestElement {
     }, timeout: Duration(milliseconds: 20000));
   }
 
-  Future<bool> get isReady => widgetExists(driver, _todoListFinder);
+  Future<bool> get isReady => widgetExists(driver, _todoListFinder,
+      timeout: Duration(milliseconds: 10000));
 
   TodoItemElement todoItem(String id) => new TodoItemElement(id, driver);
 
