@@ -1,5 +1,5 @@
-// Copyright 2018 The Flutter Architecture Sample Authors. All rights reserved. 
-// Use of this source code is governed by the MIT license that can be found 
+// Copyright 2018 The Flutter Architecture Sample Authors. All rights reserved.
+// Use of this source code is governed by the MIT license that can be found
 // in the LICENSE file.
 
 import 'dart:async';
@@ -23,7 +23,8 @@ class TodoItemElement extends TestElement {
 
   SerializableFinder get _todoItemFinder => find.byValueKey('TodoItem__${id}');
 
-  Future<bool> get isVisible => widgetExists(driver, _todoItemFinder);
+  Future<bool> get isVisible => widgetExists(driver, _todoItemFinder,
+      timeout: Duration(milliseconds: 10000));
 
   Future<bool> get isAbsent => widgetAbsent(driver, _todoItemFinder);
 
